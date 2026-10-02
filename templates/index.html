@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+
+    <title>Student Mark Calculator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #c9d3ff, #764ba2);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f5f7ff;
+            border-radius: 15px;
+        }
+
+        .result h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .result p {
+            font-size: 17px;
+            margin: 10px 0;
+        }
+
+        .performance {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .marks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .mark-box {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #d97706;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>🎓 Student Mark Calculator</h1>
+
+            <form method="POST">
+
+                <label for="name">Student Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter student name"
+                    required
+                >
+
+                <label for="subjects">Number of Subjects</label>
+                <input
+                    type="number"
+                    id="subjects"
+                    name="subjects"
+                    min="1"
+                    max="20"
+                    placeholder="Enter number of subjects"
+                    required
+                    onchange="createMarksFields()"
+                >
+
+                <div id="marksContainer"></div>
+
+                <button type="submit">
+                    Calculate Result
+                </button>
+
+            </form>
+
+
+            {% if result %}
+
+            <div class="result">
+
+                <h2>📊 Result</h2>
+
+                <p>
+                    <strong>Student:</strong>
+                    {{ result.name }}
+                </p>
+
+                <p><strong>Marks:</strong></p>
+
+                <div class="marks">
+
+                    {% for mark in result.marks %}
+
+                    <div class="mark-box">
+                        Subject {{ loop.index }}: {{ mark }}
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <p>
+                    <strong>Total Marks:</strong>
+                    {{ result.total }}
+                </p>
+
+                <p>
+                    <strong>Average:</strong>
+                    {{ "%.2f"|format(result.average) }}
+                </p>
+
+                <p>
+                    <strong>Percentage:</strong>
+                    {{ "%.2f"|format(result.percentage) }}%
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ result.grade_message }}
+                </p>
+
+                <p class="performance">
+                    {{ result.performance }}
+                </p>
+
+                <p>
+                    <strong>Subjects Passed:</strong>
+                    {{ result.passed }}
+                </p>
+
+                <p>
+                    <strong>Subjects Failed:</strong>
+                    {{ result.failed }}
+                </p>
+
+                {% if result.failed == 0 %}
+
+                <p class="success">
+                    {{ result.final_message }}
+                </p>
+
+                {% else %}
+
+                <p class="warning">
+                    {{ result.final_message }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function createMarksFields() {
+
+            const number =
+                document.getElementById("subjects").value;
+
+            const container =
+                document.getElementById("marksContainer");
+
+            container.innerHTML = "";
+
+            for (let i = 0; i < number; i++) {
+
+                const label =
+                    document.createElement("label");
+
+                label.innerText =
+                    "Marks for Subject " + (i + 1);
+
+                const input =
+                    document.createElement("input");
+
+                input.type = "number";
+                input.name = "mark" + i;
+                input.min = "0";
+                input.max = "100";
+                input.required = true;
+                input.placeholder =
+                    "Enter marks (0-100)";
+
+                container.appendChild(label);
+                container.appendChild(input);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
